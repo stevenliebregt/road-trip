@@ -1,0 +1,23 @@
+{
+    "name": "stevenliebregt/road-trip",
+    "description": "Road Trip is a PHP7+ router.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steven Liebregt",
+            "email": "stevenliebregt@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "StevenLiebregt\\RoadTrip\\": "src/"
+        }
+    }
+}

@@ -46,13 +46,27 @@ class RouteCollection
 	 * Every given option that is not defined above, will be set in the $miscOptions property. These can later be
 	 * retrieved for custom handling.
 	 *
+	 * Keys that have a null value, clear any previously set value for that option.
+	 *
 	 * @param array $options The key value array with the options to set.
 	 *
 	 * @return RouteCollection This instance to allow for method chaining.
 	 */
 	public function setOptions(array $options): RouteCollection
 	{
-		// TODO: implement
+		// Check if the path prefix is set in the options array.
+		if (array_key_exists('pathPrefix', $options))
+		{
+			$this->setPathPrefix($options['pathPrefix']);
+		}
+
+		// Check if the handler prefix is set in the options array.
+		if (array_key_exists('handlerPrefix', $options))
+		{
+			$this->setHandlerPrefix($options['handlerPrefix']);
+		}
+
+		// TODO: Loop through options and set them, look for null values.
 
 		return $this;
 	}
@@ -66,7 +80,21 @@ class RouteCollection
 	 */
 	public function setPathPrefix(string $pathPrefix): RouteCollection
 	{
-		// TODO: implement
+		$this->pathPrefix = $pathPrefix;
+
+		return $this;
+	}
+
+	/**
+	 * Set the handler prefix for this collection instance.
+	 *
+	 * @param string $handlerPrefix The new handler prefix.
+	 *
+	 * @return RouteCollection This instance to allow for method chaining.
+	 */
+	public function setHandlerPrefix(string $handlerPrefix): RouteCollection
+	{
+		$this->handlerPrefix = $handlerPrefix;
 
 		return $this;
 	}

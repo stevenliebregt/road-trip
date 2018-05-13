@@ -1,4 +1,5 @@
 # Road Trip
+Road Trip is a PHP7.1+ router.
 
 ## Todo
 - [ ] get route url by name

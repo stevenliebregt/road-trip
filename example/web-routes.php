@@ -1,0 +1,3 @@
+<?php
+
+$routeCollection = new RouteCollection();

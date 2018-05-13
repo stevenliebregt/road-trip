@@ -147,6 +147,38 @@ class RouteCollection
 	}
 
 	/**
+	 * Remove the value of the given key in the $miscOptions property. If the name is either pathPrefix or handlerPrefix
+	 * those values will get set to null.
+	 *
+	 * @param string $key The key of the value to unset.
+	 *
+	 * @return RouteCollection This instance to allow method chaining.
+	 */
+	public function removeOption(string $key): RouteCollection
+	{
+		// Check if key equals pathPrefix.
+		if ($key === 'pathPrefix')
+		{
+			$this->pathPrefix = null;
+
+			return $this;
+		}
+
+		// Check if key equals handlerPrefix.
+		if ($key === 'handlerPrefix')
+		{
+			$this->handlerPrefix = null;
+
+			return $this;
+		}
+
+		// Check for any other options.
+		unset($this->miscOptions[$key]);
+
+		return $this;
+	}
+
+	/**
 	 * Set the path prefix for this collection instance.
 	 *
 	 * @param string $pathPrefix The new path prefix.

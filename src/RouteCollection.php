@@ -225,4 +225,40 @@ class RouteCollection
 	{
 		return $this->handlerPrefix;
 	}
+
+	/**
+	 * Add a new route with the given HTTP method.
+	 *
+	 * @param string $method The HTTP method to match this route on.
+	 * @param string $path The path to match this route on.
+	 * @param string|callable $handler The handler for this route, must be either a string that defines a class prefixed
+	 * with an optional namespace, with the name of the method to call appended with a dot. Or a closure to call.
+	 *
+	 * @return Route This instance to allow for method chaining.
+	 */
+	private function add(string $method, string $path, $handler): Route
+	{
+		// Create a new Route instance.
+		$route = new Route($this, $method, $path, $handler);
+
+		// Add the route to the list.
+		$this->routes[$method][] = $route;
+
+		return $route;
+	}
+
+	/**
+	 * Register a new route for the HTTP GET method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return Route
+	 */
+	public function get(string $path, $handler): Route
+	{
+		return $this->add('GET', $path, $handler);
+	}
 }

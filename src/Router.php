@@ -11,6 +11,8 @@
 
 namespace StevenLiebregt\RoadTrip;
 
+use StevenLiebregt\RoadTrip\Exceptions\FileNotFoundException;
+
 class Router
 {
 	/**
@@ -21,15 +23,26 @@ class Router
 	public function addCollection(RouteCollection $collection)
 	{
 		// TODO: implement.
+//		pr($collection);
 	}
 
 	/**
 	 * Add a collection from the given file to this router instance.
 	 *
 	 * @param string $file The file in which the collection resides.
+	 *
+	 * @throws FileNotFoundException Throws a FileNotFoundException when the given filename did not lead to an
+	 * existing file.
 	 */
 	public function addCollectionFromFile(string $file)
 	{
-		// TODO: implement.
+		if (!file_exists($file))
+		{
+			throw new FileNotFoundException('The requested route file could not be found at location: ' . $file);
+		}
+
+		$collection = require $file;
+
+		pr($collection);
 	}
 }

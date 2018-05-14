@@ -23,7 +23,7 @@ class Router
 	public function addCollection(RouteCollection $collection)
 	{
 		// TODO: implement.
-//		pr($collection);
+		pr($collection);
 	}
 
 	/**
@@ -43,6 +43,7 @@ class Router
 
 		$collection = require $file;
 
+		// TODO: implement.
 		pr($collection);
 	}
 }

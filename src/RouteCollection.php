@@ -43,6 +43,31 @@ class RouteCollection
 	];
 
 	/**
+	 * @var bool $hasChildren Tells us if this collection has child collections.
+	 */
+	private $hasChildren = false;
+
+	/**
+	 * @var array $children Holds the child collections.
+	 */
+	private $children = [];
+
+	/**
+	 * Create a new collection but keep the prefixes and options from this instance.
+	 *
+	 * @return RouteCollection
+	 */
+	private function clone(): RouteCollection
+	{
+		$clone = new RouteCollection();
+		$clone->pathPrefix = $this->pathPrefix;
+		$clone->handlerPrefix = $this->handlerPrefix;
+		$clone->miscOptions = $this->miscOptions;
+
+		return $clone;
+	}
+
+	/**
 	 * Set the options for this collection instance with a key value array.
 	 *
 	 * @see RouteCollection::setOption().
@@ -182,12 +207,15 @@ class RouteCollection
 	 * Set the path prefix for this collection instance.
 	 *
 	 * @param string $pathPrefix The new path prefix.
+	 * @param bool $append If the path prefix should be appended or not.
 	 *
 	 * @return RouteCollection This instance to allow for method chaining.
 	 */
-	public function setPathPrefix(?string $pathPrefix): RouteCollection
+	public function setPathPrefix(?string $pathPrefix, bool $append = false): RouteCollection
 	{
-		$this->pathPrefix = $pathPrefix;
+		$this->pathPrefix = $append ?
+			$this->pathPrefix . $pathPrefix :
+			$pathPrefix;
 
 		return $this;
 	}
@@ -206,12 +234,15 @@ class RouteCollection
 	 * Set the handler prefix for this collection instance.
 	 *
 	 * @param string $handlerPrefix The new handler prefix.
+	 * @param bool $append If the handler prefix should be appended or not.
 	 *
 	 * @return RouteCollection This instance to allow for method chaining.
 	 */
-	public function setHandlerPrefix(?string $handlerPrefix): RouteCollection
+	public function setHandlerPrefix(?string $handlerPrefix, bool $append = false): RouteCollection
 	{
-		$this->handlerPrefix = $handlerPrefix;
+		$this->handlerPrefix = $append ?
+			$this->handlerPrefix . $handlerPrefix :
+			$handlerPrefix;
 
 		return $this;
 	}
@@ -260,5 +291,142 @@ class RouteCollection
 	public function get(string $path, $handler): Route
 	{
 		return $this->add('GET', $path, $handler);
+	}
+
+	/**
+	 * Register a new route for the HTTP POST method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return Route
+	 */
+	public function post(string $path, $handler): Route
+	{
+		return $this->add('POST', $path, $handler);
+	}
+
+	/**
+	 * Register a new route for the HTTP PUT method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return Route
+	 */
+	public function put(string $path, $handler): Route
+	{
+		return $this->add('PUT', $path, $handler);
+	}
+
+	/**
+	 * Register a new route for the HTTP PATCH method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return Route
+	 */
+	public function patch(string $path, $handler): Route
+	{
+		return $this->add('PATCH', $path, $handler);
+	}
+
+	/**
+	 * Register a new route for the HTTP DELETE method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return Route
+	 */
+	public function delete(string $path, $handler): Route
+	{
+		return $this->add('DELETE', $path, $handler);
+	}
+
+	/**
+	 * Register a new route for the HTTP HEAD method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return Route
+	 */
+	public function head(string $path, $handler): Route
+	{
+		return $this->add('HEAD', $path, $handler);
+	}
+
+	/**
+	 * Register new routes for the given HTTP methods.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param array $methods
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return array
+	 */
+	public function match(array $methods, string $path, $handler): array
+	{
+		$routes = [];
+
+		foreach ($methods as $method)
+		{
+			$routes[strtoupper($method)] = $this->add(strtoupper($method), $path, $handler);
+		}
+
+		return $routes;
+	}
+
+	/**
+	 * Register new routes for the any HTTP method.
+	 *
+	 * @see RouteCollection::add() for information about the parameters and return values.
+	 *
+	 * @param string $path
+	 * @param $handler
+	 *
+	 * @return array
+	 */
+	public function any(string $path, $handler): array
+	{
+		return [
+			'GET' => $this->add('GET', $path, $handler),
+			'POST' => $this->add('POST', $path, $handler),
+			'PUT' => $this->add('PUT', $path, $handler),
+			'PATCH' => $this->add('PATCH', $path, $handler),
+			'DELETE' => $this->add('DELETE', $path, $handler),
+			'HEAD' => $this->add('HEAD', $path, $handler),
+		];
+	}
+
+	/**
+	 * Create a new collection that is a child of this collection.
+	 *
+	 * The newly created collection inherits all options.
+	 *
+	 * @param \Closure $closure A closure in which a new set of routes can be defined.
+	 */
+	public function group(\Closure $closure)
+	{
+		$clone = $this->clone();
+
+		$closure($clone);
+
+		$this->hasChildren = true;
+		$this->children[] = $clone;
 	}
 }

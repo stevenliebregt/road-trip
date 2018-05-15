@@ -73,7 +73,7 @@ class Route
 	}
 
 	/**
-	 * Set the name of this route.
+	 * Set the name of this route, this name can be used to retrieve a route by name.
 	 *
 	 * @param string $name The name of this route.
 	 *

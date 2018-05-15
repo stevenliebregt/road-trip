@@ -420,7 +420,7 @@ class RouteCollection
 	 *
 	 * @param \Closure $closure A closure in which a new set of routes can be defined.
 	 */
-	public function group(\Closure $closure)
+	public function group(\Closure $closure): void
 	{
 		$clone = $this->clone();
 

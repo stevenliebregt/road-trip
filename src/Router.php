@@ -19,11 +19,15 @@ class Router
 	 * Add a given collection to this router instance.
 	 *
 	 * @param RouteCollection $collection The collection to add.
+	 *
+	 * @return Router This instance to allow for method chaining.
 	 */
-	public function addCollection(RouteCollection $collection)
+	public function addCollection(RouteCollection $collection): Router
 	{
 		// TODO: implement.
 		pr($collection);
+
+		return $this;
 	}
 
 	/**
@@ -33,9 +37,12 @@ class Router
 	 *
 	 * @throws FileNotFoundException Throws a FileNotFoundException when the given filename did not lead to an
 	 * existing file.
+	 *
+	 * @return Router This instance to allow for method chaining.
 	 */
-	public function addCollectionFromFile(string $file)
+	public function addCollectionFromFile(string $file): Router
 	{
+		// Check if the file exists.
 		if (!file_exists($file))
 		{
 			throw new FileNotFoundException('The requested route file could not be found at location: ' . $file);
@@ -45,5 +52,7 @@ class Router
 
 		// TODO: implement.
 		pr($collection);
+
+		return $this;
 	}
 }

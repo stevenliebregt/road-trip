@@ -24,8 +24,7 @@ class Router
 	 */
 	public function addCollection(RouteCollection $collection): Router
 	{
-		// TODO: implement.
-		pr($collection);
+		// TODO: implement
 
 		return $this;
 	}

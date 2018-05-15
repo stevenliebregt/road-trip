@@ -14,23 +14,23 @@ namespace StevenLiebregt\RoadTrip;
 class RouteCollection
 {
 	/**
-	 * @var string|null $pathPrefix Holds the prefix for the path to match.
+	 * @var string|null Holds the prefix for the path to match.
 	 */
 	private $pathPrefix = null;
 
 	/**
-	 * @var string|null $handlerPrefix Holds the prefix for the handler to execute.
+	 * @var string|null Holds the prefix for the handler to execute.
 	 */
 	private $handlerPrefix = null;
 
 	/**
-	 * @var array $miscOptions Holds the custom options that the user has set with the RouteCollection::setOptions
+	 * @var array Holds the custom options that the user has set with the RouteCollection::setOptions
 	 * method.
 	 */
 	private $miscOptions = [];
 
 	/**
-	 * @var array $routes Holds the list of all routes, grouped as a multidimensional array where the key is the
+	 * @var array Holds the list of all routes, grouped as a multidimensional array where the key is the
 	 * HTTP request method associated.
 	 */
 	private $routes = [
@@ -43,12 +43,12 @@ class RouteCollection
 	];
 
 	/**
-	 * @var bool $hasChildren Tells us if this collection has child collections.
+	 * @var bool Tells us if this collection has child collections.
 	 */
 	private $hasChildren = false;
 
 	/**
-	 * @var array $children Holds the child collections.
+	 * @var array Holds the child collections.
 	 */
 	private $children = [];
 

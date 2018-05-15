@@ -14,7 +14,7 @@ namespace StevenLiebregt\RoadTrip;
 class Route
 {
 	/**
-	 * @var RouteCollection $collection Holds the collection that contains this route.
+	 * @var RouteCollection Holds the collection that contains this route.
 	 */
 	private $collection;
 
@@ -29,17 +29,17 @@ class Route
 	private $path;
 
 	/**
-	 * @var string|callable $handler Holds the handler for this route.
+	 * @var string|callable Holds the handler for this route.
 	 */
 	private $handler;
 
 	/**
-	 * @var array $rules Holds the rules for the parameters in the path.
+	 * @var array Holds the rules for the parameters in the path.
 	 */
 	private $rules = [];
 
 	/**
-	 * @var string $name Holds the name of this route.
+	 * @var string Holds the name of this route.
 	 */
 	private $name;
 

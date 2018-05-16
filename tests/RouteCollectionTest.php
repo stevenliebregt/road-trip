@@ -40,14 +40,30 @@ final class RouteCollectionTest extends TestCase
 		$this->assertSame('/foo/bar', $collection->getPathPrefix());
 	}
 
+    /**
+     * Tests whether handler prefixes are set successfully.
+     */
 	public function testHandlerPrefixIsSet(): void
 	{
-		// TODO:
+        $collection = new RouteCollection();
+        $collection->setHandlerPrefix('Api\\');
+        
+        $this->assertSame('Api\\', $collection->getHandlerPrefix());
 	}
 
+    /**
+     * Tests whether handler prefixes are appended successfully.
+     */
 	public function testHandlerPrefixIsAppended(): void
 	{
-		// TODO:
+        $collection = new RouteCollection();
+        $collection->setHandlerPrefix('Api\\');
+
+        $this->assertSame('Api\\', $collection->getHandlerPrefix());
+
+        $collection->setHandlerPrefix('V1\\', true);
+
+        $this->assertSame('Api\\V1\\', $collection->getHandlerPrefix());
 	}
 
 	public function testOptionsAreSet(): void

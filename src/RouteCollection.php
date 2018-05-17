@@ -13,26 +13,16 @@ namespace StevenLiebregt\RoadTrip;
 
 class RouteCollection
 {
-	/**
-	 * @var string|null Holds the prefix for the path to match.
-	 */
+	/** @var string|null Holds the prefix for the path to match. */
 	private $pathPrefix = null;
 
-	/**
-	 * @var string|null Holds the prefix for the handler to execute.
-	 */
+	/** @var string|null Holds the prefix for the handler to execute. */
 	private $handlerPrefix = null;
 
-	/**
-	 * @var array Holds the custom options that the user has set with the RouteCollection::setOptions
-	 * method.
-	 */
+	/** @var array Holds the custom options that the user has set with the RouteCollection::setOptions method. */
 	private $miscOptions = [];
 
-	/**
-	 * @var array Holds the list of all routes, grouped as a multidimensional array where the key is the
-	 * HTTP request method associated.
-	 */
+	/** @var array Holds the list of all routes, grouped as a multidimensional array where the key is the HTTP request method associated. */
 	private $routes = [
 		'GET' => [],
 		'POST' => [],
@@ -42,14 +32,10 @@ class RouteCollection
 		'HEAD' => [],
 	];
 
-	/**
-	 * @var bool Tells us if this collection has child collections.
-	 */
+	/** @var bool Tells us if this collection has child collections. */
 	private $hasChildren = false;
 
-	/**
-	 * @var array Holds the child collections.
-	 */
+	/** @var array Holds the child collections. */
 	private $children = [];
 
 	/**
@@ -79,8 +65,7 @@ class RouteCollection
 	public function setOptions(array $options): RouteCollection
 	{
 		// Loop through extra options.
-		foreach ($options as $key => $value)
-		{
+		foreach ($options as $key => $value) {
 			$this->setOption($key, $value);
 		}
 
@@ -120,16 +105,14 @@ class RouteCollection
 	public function setOption(string $key, $value): RouteCollection
 	{
 		// Check if the key equals pathPrefix.
-		if ($key === 'pathPrefix')
-		{
+		if ($key === 'pathPrefix') {
 			$this->setPathPrefix($value);
 
 			return $this;
 		}
 
 		// Check if the key equals handlerPrefix.
-		if ($key === 'handlerPrefix')
-		{
+		if ($key === 'handlerPrefix') {
 			$this->setHandlerPrefix($value);
 
 			return $this;
@@ -151,20 +134,17 @@ class RouteCollection
 	public function getOption(string $key)
 	{
 		// Check if the key equals pathPrefix.
-		if ($key === 'pathPrefix')
-		{
+		if ($key === 'pathPrefix') {
 			return $this->pathPrefix;
 		}
 
 		// Check if the key equals handlerPrefix.
-		if ($key === 'handlerPrefix')
-		{
+		if ($key === 'handlerPrefix') {
 			return $this->handlerPrefix;
 		}
 
 		// Check if key is set.
-		if (!isset($this->miscOptions[$key]))
-		{
+		if (!isset($this->miscOptions[$key])) {
 			return null;
 		}
 
@@ -182,22 +162,20 @@ class RouteCollection
 	public function removeOption(string $key): RouteCollection
 	{
 		// Check if key equals pathPrefix.
-		if ($key === 'pathPrefix')
-		{
+		if ($key === 'pathPrefix') {
 			$this->pathPrefix = null;
 
 			return $this;
 		}
 
 		// Check if key equals handlerPrefix.
-		if ($key === 'handlerPrefix')
-		{
+		if ($key === 'handlerPrefix') {
 			$this->handlerPrefix = null;
 
 			return $this;
 		}
 
-		// Check for any other options.
+		// Remove the option.
 		unset($this->miscOptions[$key]);
 
 		return $this;

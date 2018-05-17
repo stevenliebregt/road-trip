@@ -13,34 +13,22 @@ namespace StevenLiebregt\RoadTrip;
 
 class Route
 {
-	/**
-	 * @var RouteCollection Holds the collection that contains this route.
-	 */
+	/** @var RouteCollection Holds the collection that contains this route. */
 	private $collection;
 
-	/**
-	 * @var string Holds the HTTP method that this route should match for.
-	 */
+	/** @var string Holds the HTTP method that this route should match for. */
 	private $method;
 
-	/**
-	 * @var string Holds the path that this route should be matched on.
-	 */
+	/** @var string Holds the path that this route should be matched on. */
 	private $path;
 
-	/**
-	 * @var string|callable Holds the handler for this route.
-	 */
+	/** @var string|callable Holds the handler for this route. */
 	private $handler;
 
-	/**
-	 * @var array Holds the rules for the parameters in the path.
-	 */
+	/** @var array Holds the rules for the parameters in the path. */
 	private $rules = [];
 
-	/**
-	 * @var string Holds the name of this route.
-	 */
+	/** @var string Holds the name of this route. */
 	private $name;
 
 	public function __construct(RouteCollection $collection, string $method, string $path, $handler)

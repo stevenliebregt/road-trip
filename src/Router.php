@@ -17,14 +17,10 @@ class Router
 {
 	const CACHE_FILENAME = 'road-trip.cache.php';
 
-	/**
-	 * @var array Holds the directories that contain the route files.
-	 */
+	/** @var array Holds the directories that contain the route files. */
 	private $routeDirs = [];
 
-	/**
-	 * @var string Holds the directory in which the cached routes get saved.
-	 */
+	/** @var string Holds the directory in which the cached routes get saved. */
 	private $cacheDir = '';
 
 	/**
@@ -122,47 +118,34 @@ class Router
 		$collection = null;
 
 		// Check if file exists here.
-		if (!file_exists($file))
-		{
+		if (!file_exists($file)) {
 			// Check if it perhaps is found with .php extension.
-			if (!file_exists($file . '.php'))
-			{
+			if (!file_exists($file . '.php')) {
 				// Loop through route dirs.
-				foreach ($this->routeDirs as $dir)
-				{
+				foreach ($this->routeDirs as $dir) {
 					// Check if file exists.
-					if (!file_exists($dir . DIRECTORY_SEPARATOR . $file))
-					{
+					if (!file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
 						// Check if it perhaps is found with a .php extension.
-						if (file_exists($dir . DIRECTORY_SEPARATOR . $file . '.php'))
-						{
+						if (file_exists($dir . DIRECTORY_SEPARATOR . $file . '.php')) {
 							$collection = require $dir . DIRECTORY_SEPARATOR . $file . '.php';
 						}
-					}
-					else
-					{
+					} else {
 						$collection = require $dir . DIRECTORY_SEPARATOR . $file;
 					}
 
 					// Check if we have found it so we can stop looping.
-					if ($collection !== null)
-					{
+					if ($collection !== null) {
 						continue;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$collection = require $file . '.php';
 			}
-		}
-		else
-		{
+		} else {
 			$collection = require $file;
 		}
 
-		if ($collection === null)
-		{
+		if ($collection === null) {
 			throw new FileNotFoundException('The requested route file: [ ' . $file . ' ] could not be found');
 		}
 

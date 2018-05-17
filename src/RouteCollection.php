@@ -361,8 +361,7 @@ class RouteCollection
 	{
 		$routes = [];
 
-		foreach ($methods as $method)
-		{
+		foreach ($methods as $method) {
 			$routes[strtoupper($method)] = $this->add(strtoupper($method), $path, $handler);
 		}
 

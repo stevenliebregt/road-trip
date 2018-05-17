@@ -15,13 +15,20 @@ use StevenLiebregt\RoadTrip\Exceptions\FileNotFoundException;
 
 class Router
 {
-	const CACHE_FILENAME = 'road-trip.cache.php';
+	const CACHE_FILENAME = 'road-trip.cache';
+
+	const NOT_FOUND = 0;
+	const FOUND = 1;
+	const METHOD_NOT_ALLOWED = 2;
 
 	/** @var array Holds the directories that contain the route files. */
 	private $routeDirs = [];
 
 	/** @var string Holds the directory in which the cached routes get saved. */
 	private $cacheDir = '';
+
+	/** @var array Holds the collections of routes added to this router instance.  */
+	private $collections = [];
 
 	/**
 	 * Set the route directories.
@@ -65,30 +72,6 @@ class Router
 		return file_exists($file);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**
 	 * Add a given collection to this router instance.
 	 *
@@ -98,7 +81,7 @@ class Router
 	 */
 	public function addCollection(RouteCollection $collection): Router
 	{
-		// TODO: implement
+		$this->collections[] = $collection;
 
 		return $this;
 	}
@@ -149,7 +132,7 @@ class Router
 			throw new FileNotFoundException('The requested route file: [ ' . $file . ' ] could not be found');
 		}
 
-		// TODO: do something with collection maybe.
+		$this->addCollection($collection);
 
 		return $this;
 	}

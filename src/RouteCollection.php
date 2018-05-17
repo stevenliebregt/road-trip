@@ -13,8 +13,8 @@ namespace StevenLiebregt\RoadTrip;
 
 class RouteCollection
 {
-	/** @var string|null Holds the prefix for the path to match. */
-	private $pathPrefix = null;
+	/** @var string Holds the prefix for the path to match. */
+	private $pathPrefix = '';
 
 	/** @var string|null Holds the prefix for the handler to execute. */
 	private $handlerPrefix = null;
@@ -189,7 +189,7 @@ class RouteCollection
 	 *
 	 * @return RouteCollection This instance to allow for method chaining.
 	 */
-	public function setPathPrefix(?string $pathPrefix, bool $append = false): RouteCollection
+	public function setPathPrefix(string $pathPrefix, bool $append = false): RouteCollection
 	{
 		$this->pathPrefix = $append ?
 			$this->pathPrefix . $pathPrefix :
@@ -201,9 +201,9 @@ class RouteCollection
 	/**
 	 * Return the value of the pathPrefix.
 	 *
-	 * @return null|string The value of pathPrefix.
+	 * @return string The value of pathPrefix.
 	 */
-	public function getPathPrefix(): ?string
+	public function getPathPrefix(): string
 	{
 		return $this->pathPrefix;
 	}

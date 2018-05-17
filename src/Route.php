@@ -13,7 +13,10 @@ namespace StevenLiebregt\RoadTrip;
 
 class Route
 {
-	/** @var RouteCollection Holds the collection that contains this route. */
+	const PARAMETER_SYMBOL_LEFT = "{";
+	const PARAMETER_SYMBOL_RIGHT = "}";
+
+	/** @var RouteCollection The collection in which this route resides. */
 	private $collection;
 
 	/** @var string Holds the HTTP method that this route should match for. */
@@ -31,33 +34,26 @@ class Route
 	/** @var string Holds the name of this route. */
 	private $name;
 
+	/** @var bool Defines if the route is static or has parameters. */
+	private $isStatic;
+
+	/** @var string Regular expression for routes with parameterized parts. */
+	private $regex;
+
+	/** @var array Holds the parameters for this route. */
+	private $parameters = [];
+
 	public function __construct(RouteCollection $collection, string $method, string $path, $handler)
 	{
 		$this->collection = $collection;
 		$this->method = $method;
-		$this->path = $path;
-		$this->handler = $handler;
-
-		/*
-
-		TODO: This is the old version, in this version the pathPrefix and handlerPrefix get added directly, but that
-		might not be necessary since we also set the parent RouteCollection item which contains these variables.
-
-		$this->collection = $collection;
-		$this->method = $method;
 		$this->path = $this->collection->getPathPrefix() . $path;
+		$this->handler = is_string($handler) ?
+			$this->collection->getHandlerPrefix() . $handler :
+			$handler;
 
-		// If the handler is a not a callable, prepend the handler prefix.
-		if (!is_callable($handler))
-		{
-			$this->handler = $this->collection->getHandlerPrefix() . $handler;
-		}
-		else
-		{
-			$this->handler = $handler;
-		}
-
-		*/
+		// Check if route is static by checking if it contains a placeholder character.
+		$this->isStatic = (bool) !stripos($path, Route::PARAMETER_SYMBOL_LEFT);
 	}
 
 	/**
@@ -69,6 +65,8 @@ class Route
 	 */
 	public function setName(string $name): Route
 	{
+		// TODO: retrieve $this->collection->getNamePrefix();
+
 		$this->name = $name;
 
 		return $this;
@@ -88,6 +86,7 @@ class Route
 	 * Set a rule for a parameter with a regex.
 	 *
 	 * The parentheses for a capturing group are added by this method.
+	 * If this method is not called, the default regular expression allows any character except a forward slash.
 	 *
 	 * @param string $key The parameter name as displayed in the path without the curly braces.
 	 * @param string $regex The regular expression to match for the parameter value.
@@ -99,5 +98,34 @@ class Route
 		$this->rules[$key] = '(' . $regex . ')'; // Automatically add capturing group around regex.
 
 		return $this;
+	}
+
+	/**
+	 * Create a regular expression that matches this route's path, parameters and set rules.
+	 */
+	private function createRegex(): void
+	{
+		$regex = '/^'; // Start of the regex, which matches start of string.
+
+		// Loop through route parts to define which parts are parameters.
+		$parts = explode('/', ltrim($this->path, '/'));
+		foreach ($parts as $part) {
+			$regex .= '\/'; // Matches the starting slash.
+
+			// Check if the parameter symbol is in this part, if that is the case, it is parameter, otherwise it is a
+			// static part.
+			if (stripos($part, Route::PARAMETER_SYMBOL_LEFT) === false) {
+				$regex .= $part; // Match this part exactly as given.
+				continue;
+			}
+
+			// If we are here, then we're dealing with a parameter.
+			$name = str_ireplace([Route::PARAMETER_SYMBOL_LEFT, Route::PARAMETER_SYMBOL_RIGHT], '', $part);
+			$this->parameters[] = $name;
+			$regex .= isset($this->rules[$name]) ? '(' . $this->rules[$name] . ')' : '([^\/]+)';
+		}
+
+		$regex .= '$/'; // End of the regex, which maters end of string.
+		$this->regex = $regex;
 	}
 }

@@ -21,6 +21,9 @@ class Router
 	const FOUND = 1;
 	const METHOD_NOT_ALLOWED = 2;
 
+    /** @var bool Defines if we should cache the compiled routes. */
+    private $shouldCache = false;
+
 	/** @var array Holds the directories that contain the route files. */
 	private $routeDirs = [];
 
@@ -135,5 +138,42 @@ class Router
 		$this->addCollection($collection);
 
 		return $this;
-	}
+    }
+
+    /**
+     * Compile the collections that are currently added.
+     */
+    public function compile(): void
+    {
+        // TODO: compile the routes. Add them to this router instance.
+
+        if ($this->shouldCache) {
+            // TODO: cache
+        }
+    }
+
+    /**
+     * Caches the currently added compiled routes to the defined cache file.
+     */
+    private function cache(): void
+    {
+        // TODO: cache the currently compiled routes
+    }
+
+    /**
+     * Checks whether any of the registered routes match the given HTTP method and URI.
+     * 
+     * @param string $method The HTTP method that is currently used with the request.
+     * @param string $uri The currently used URI. This should be without the domain and without the query.
+     *
+     * @return array Returns a key, value array with the keys 'result' and 'route'. The key 'result' tells you
+     * if the request was either Router::FOUND, Router::METHOD_NOT_ALLOWED or Router::NOT_FOUND.
+     * The key 'route' gives you the matched route from which you can extract the handler.
+     */
+    public function match(string $method, string $uri): array
+    {
+        if ($this->shouldCache) {
+            // TODO: we should load the compiled routes from the cache file.
+        }        
+    }
 }

@@ -33,34 +33,70 @@ class Router
 	/** @var array Holds the collections of routes added to this router instance.  */
 	private $collections = [];
 
+	/** @var array Holds the compiled routes. */
+	private $compiledRoutes = [
+		'GET' => [],
+		'POST' => [],
+		'PUT' => [],
+		'PATCH' => [],
+		'DELETE' => [],
+		'HEAD' => [],
+	];
+
 	/**
 	 * Set the route directories.
 	 *
 	 * @param array $dirs The directories to use as route containing directories.
+	 *
+	 * @return Router This router instance to allow for method chaining.
 	 */
-	public function setRouteDirs(array $dirs): void
+	public function setRouteDirs(array $dirs): Router
 	{
 		$this->routeDirs = $dirs;
+
+		return $this;
 	}
 
 	/**
 	 * Add route directories to an existing list.
 	 *
 	 * @param array $dirs The directories to use as route containing directories.
+	 *
+	 * @return Router This router instance to allow for method chaining.
 	 */
-	public function addRouteDirs(array $dirs): void
+	public function addRouteDirs(array $dirs): Router
 	{
 		$this->routeDirs = array_merge($this->routeDirs, $dirs);
+
+		return $this;
+	}
+
+	/**
+	 * Set if the router should use cache or not.
+	 *
+	 * @param bool $shouldCache Should we cache or not.
+	 *
+	 * @return Router This router instance to allow for method chaining.
+	 */
+	public function shouldCache(bool $shouldCache): Router
+	{
+		$this->shouldCache = $shouldCache;
+
+		return $this;
 	}
 
 	/**
 	 * Set the directory in which the route cache gets saved.
 	 *
 	 * @param string $dir The directory in which the route cache gets saved.
+	 *
+	 * @return Router This router instance to allow for method chaining.
 	 */
-	public function setCacheDir(string $dir): void
+	public function setCacheDir(string $dir): Router
 	{
 		$this->cacheDir = $dir;
+
+		return $this;
 	}
 
 	/**
@@ -145,10 +181,18 @@ class Router
      */
     public function compile(): void
     {
-        // TODO: compile the routes. Add them to this router instance.
+    	/** @var RouteCollection $collection */
+	    foreach ($this->collections as $collection) {
+	        foreach ($collection->getRoutes() as $method => $routes) {
+        		/** @var Route $route */
+		        foreach ($routes as $route) {
+        			$this->compiledRoutes[$method][] = $route->compile();
+		        }
+	        }
+        }
 
         if ($this->shouldCache) {
-            // TODO: cache
+            $this->cache();
         }
     }
 
@@ -157,6 +201,7 @@ class Router
      */
     private function cache(): void
     {
+
         // TODO: cache the currently compiled routes
     }
 
@@ -172,8 +217,6 @@ class Router
      */
     public function match(string $method, string $uri): array
     {
-        if ($this->shouldCache) {
-            // TODO: we should load the compiled routes from the cache file.
-        }        
+    	$routes = $this->shouldCache ? $this->loadRoutesFromFile($method) : $this->compiledRoutes;
     }
 }

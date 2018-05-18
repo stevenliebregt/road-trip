@@ -101,6 +101,27 @@ class Route
 	}
 
 	/**
+	 * Compile this route.
+	 *
+	 * First create the regular expression if necessary, and then unset some variables to prevent clutter when caching.
+	 *
+	 * @return Route The compiled route.
+	 */
+	public function compile(): Route
+	{
+		// Check if we need to create a regular expression.
+		if (!$this->isStatic) {
+			$this->createRegex();
+		}
+
+		// The following variables will not be useful after caching, so we'll delete them.
+		$this->collection = null;
+		$this->rules = null;
+
+		return $this;
+	}
+
+	/**
 	 * Create a regular expression that matches this route's path, parameters and set rules.
 	 */
 	private function createRegex(): void

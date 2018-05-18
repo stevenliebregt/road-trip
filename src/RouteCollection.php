@@ -406,4 +406,15 @@ class RouteCollection
 		$this->hasChildren = true;
 		$this->children[] = $clone;
 	}
+
+	/**
+	 * Retrieve the routes from this collection.
+	 *
+	 * @return array This collection's routes as a key, value array where the key is the HTTP method and the value is an
+	 * array of routes with that method.
+	 */
+	public function getRoutes(): array
+	{
+		return $this->routes;
+	}
 }

@@ -2,52 +2,67 @@
 Quickstart
 ==========
 
-No cache example
-================
+This page provides a quick introduction to Road Trip, and shows some examples. If you have not installed Road Trip yet,
+please head over to the ``overview`` page.
 
-This example shows you how to create a router without using cache.
+Basic example
+=============
+
+This basic example will get you started right away.
 
 .. code-block:: php
 
     <?php
+
+    use StevenLiebregt\RoadTrip\RouteCollection;
+    use StevenLiebregt\RoadTrip\Router;
 
     $router = new Router();
 
     $collection = new RouteCollection();
-    $collection->get('/foo', function () {
-        echo 'Hello, world!';
-    });
+    $collection->get('/products', 'ProductController.index');
+    $collection->post('/products', 'ProductController.create');
 
     $router->addCollection($collection);
-
     $router->compile();
 
-    // Check for a match.
-    $match = $router->match();
+    $match = $router->match('THE_CURRENT_REQUEST_METHOD', 'THE_CURRENT_REQUEST_URI');
 
-Cache example
-=============
+Setting options and prefixes
+============================
+
+This example will show you how to set prefixes for path, names and handlers, and how you can set options.
 
 .. code-block:: php
 
     <?php
 
+    use StevenLiebregt\RoadTrip\RouteCollection;
+    use StevenLiebregt\RoadTrip\Router;
+
     $router = new Router();
-    $router->shouldCache(true);
 
-    // Check if we have a cache file, if that is the case, we don't need to generate the
-    // following routes and collections and generate regular expressions.
-    if (!$router->hasCache()) {
-        $collection = new RouteCollection();
-        $collection->get('/foo', function () {
-            echo 'Hello, world!';
-        });
+    $collection = new RouteCollection();
+    $collection->setPathPrefix('/api');
 
-        $router->addCollection($collection);
+    $collection->get('/foo', 'Foo.Action'); // The prefix resolves this to `/api/foo`.
 
-        $router->compile();
-    }
+    $router->addCollection($collection);
+    $router->compile();
 
-    // Check for a match.
-    $match = $router->match();
+    $match = $router->match('THE_CURRENT_REQUEST_METHOD', 'THE_CURRENT_REQUEST_URI');
 
+Loading multiple collections
+============================
+
+TODO
+
+Loading collections from files
+==============================
+
+TODO
+
+Caching routes
+==============
+
+TODO

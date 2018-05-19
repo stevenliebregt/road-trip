@@ -70,9 +70,7 @@ class Route
      */
     public function setName(string $name): Route
     {
-        // TODO: retrieve $this->collection->getNamePrefix();
-
-        $this->name = $name;
+        $this->name = $this->collection->getNamePrefix() . $name;
 
         return $this;
     }

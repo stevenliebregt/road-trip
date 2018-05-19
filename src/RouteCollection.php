@@ -16,8 +16,11 @@ class RouteCollection
     /** @var string Holds the prefix for the path to match. */
     private $pathPrefix = '';
 
+    /** @var string Holds the prefix for the name. */
+    private $namePrefix = '';
+
     /** @var string|null Holds the prefix for the handler to execute. */
-    private $handlerPrefix = null;
+    private $handlerPrefix = '';
 
     /** @var array Holds the custom options that the user has set with the RouteCollection::setOptions method. */
     private $miscOptions = [];
@@ -93,6 +96,7 @@ class RouteCollection
      * The following options are special, and can be used to set those options in one array:
      *  - pathPrefix, this will call the RouteCollection::setPathPrefix method with the given value.
      *  - handlerPrefix, this will call the RouteCollection::setHandlerPrefix method with the given value.
+     *  - namePrefix, this will call the RouteCollection::setNamePrefix method with the given value.
      *
      * Every given option that is not defined above, will be set in the $miscOptions property. These can later be
      * retrieved for custom handling.
@@ -114,6 +118,13 @@ class RouteCollection
         // Check if the key equals handlerPrefix.
         if ($key === 'handlerPrefix') {
             $this->setHandlerPrefix($value);
+
+            return $this;
+        }
+
+        // Check if the key equals namePrefix.
+        if ($key === 'namePrefix') {
+            $this->setNamePrefix($value);
 
             return $this;
         }
@@ -143,6 +154,11 @@ class RouteCollection
             return $this->handlerPrefix;
         }
 
+        // Check if the key equals namePrefix.
+        if ($key === 'namePrefix') {
+            return $this->namePrefix;
+        }
+
         // Check if key is set.
         if (!isset($this->miscOptions[$key])) {
             return null;
@@ -153,7 +169,7 @@ class RouteCollection
 
     /**
      * Remove the value of the given key in the $miscOptions property. If the name is either pathPrefix or handlerPrefix
-     * those values will get set to null.
+     * or namePrefix those values will get set to null.
      *
      * @param string $key The key of the value to unset.
      *
@@ -163,14 +179,21 @@ class RouteCollection
     {
         // Check if key equals pathPrefix.
         if ($key === 'pathPrefix') {
-            $this->pathPrefix = null;
+            $this->pathPrefix = '';
 
             return $this;
         }
 
         // Check if key equals handlerPrefix.
         if ($key === 'handlerPrefix') {
-            $this->handlerPrefix = null;
+            $this->handlerPrefix = '';
+
+            return $this;
+        }
+
+        // Check if key equals namePrefix.
+        if ($key === 'namePrefix') {
+            $this->namePrefix = '';
 
             return $this;
         }
@@ -209,6 +232,33 @@ class RouteCollection
     }
 
     /**
+     * Set the name prefix for this collection instance.
+     *
+     * @param string $namePrefix The new name prefix.
+     * @param bool $append If the name prefix should be appended or not.
+     *
+     * @return RouteCollection This instance to allow for method chaining.
+     */
+    public function setNamePrefix(string $namePrefix, bool $append = false): RouteCollection
+    {
+        $this->namePrefix = $append ?
+            $this->namePrefix . $namePrefix :
+            $namePrefix;
+
+        return $this;
+    }
+
+    /**
+     * Return the value of the namePrefix.
+     *
+     * @return string The value of namePrefix.
+     */
+    public function getNamePrefix(): string
+    {
+        return $this->namePrefix;
+    }
+
+    /**
      * Set the handler prefix for this collection instance.
      *
      * @param string $handlerPrefix The new handler prefix.
@@ -216,7 +266,7 @@ class RouteCollection
      *
      * @return RouteCollection This instance to allow for method chaining.
      */
-    public function setHandlerPrefix(?string $handlerPrefix, bool $append = false): RouteCollection
+    public function setHandlerPrefix(string $handlerPrefix, bool $append = false): RouteCollection
     {
         $this->handlerPrefix = $append ?
             $this->handlerPrefix . $handlerPrefix :
@@ -228,9 +278,9 @@ class RouteCollection
     /**
      * Return the value of handlerPrefix.
      *
-     * @return null|string The value of handlerPrefix.
+     * @return string The value of handlerPrefix.
      */
-    public function getHandlerPrefix(): ?string
+    public function getHandlerPrefix(): string
     {
         return $this->handlerPrefix;
     }

@@ -15,11 +15,10 @@ use StevenLiebregt\RoadTrip\Exceptions\FileNotFoundException;
 
 class Router
 {
-    const CACHE_FILENAME = 'road-trip.cache';
+    const CACHE_FILE = '%s.cache';
 
     const NOT_FOUND = 0;
     const FOUND = 1;
-    const METHOD_NOT_ALLOWED = 2;
 
     /** @var bool Defines if we should cache the compiled routes. */
     private $shouldCache = false;
@@ -28,7 +27,7 @@ class Router
     private $routeDirs = [];
 
     /** @var string Holds the directory in which the cached routes get saved. */
-    private $cacheDir = '';
+    private $cacheDir = 'cache';
 
     /** @var array Holds the collections of routes added to this router instance.  */
     private $collections = [];
@@ -41,6 +40,12 @@ class Router
         'PATCH' => [],
         'DELETE' => [],
         'HEAD' => [],
+    ];
+
+    /** @var array Holds a possible match. */
+    private $match = [
+        'result' => Router::NOT_FOUND,
+        'route' => null,
     ];
 
     /**
@@ -100,15 +105,20 @@ class Router
     }
 
     /**
-     * Checks if the route cache file exists.
+     * Checks if the route cache folder exists and is not empty.
      *
-     * @return bool If the cache file exists.
+     * @return bool If the cache folder exists and is not empty.
      */
     public function hasCache(): bool
     {
-        $file = ($this->cacheDir === '') ? Router::CACHE_FILENAME : $this->cacheDir . DIRECTORY_SEPARATOR . Router::CACHE_FILENAME;
+        if (file_exists($this->cacheDir) &&
+            is_readable($this->cacheDir) &&
+            count(scandir($this->cacheDir)) > 2) {
 
-        return file_exists($file);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -201,8 +211,12 @@ class Router
      */
     private function cache(): void
     {
+        mkdir($this->cacheDir);
 
-        // TODO: cache the currently compiled routes
+        foreach ($this->compiledRoutes as $method => $routes) {
+            $file = $this->cacheDir . DIRECTORY_SEPARATOR . $method . '.cache';
+            file_put_contents($file, serialize($routes));
+        }
     }
 
     /**
@@ -218,5 +232,38 @@ class Router
     public function match(string $method, string $uri): array
     {
         $routes = $this->shouldCache ? $this->loadRoutesFromFile($method) : $this->compiledRoutes;
+
+        // Check if we can find a match.
+        /** @var Route $route */
+        foreach ($routes as $route) {
+            if ($route->isMatch($uri)) {
+                $this->match = [
+                    'result' => Router::FOUND,
+                    'route' => $route,
+                ];
+
+                return $this->match;
+            } else {
+                $this->match = [
+                    'result' => Router::NOT_FOUND,
+                ];
+            }
+        }
+
+        return $this->match;
+    }
+
+    /**
+     * Load routes for a given HTTP method from the cache file.
+     *
+     * @param string $method The HTTP method to get routes for.
+     *
+     * @return array The routes for the asked method.
+     */
+    private function loadRoutesFromFile(string $method): array
+    {
+        $file = $this->cacheDir . DIRECTORY_SEPARATOR . sprintf(Router::CACHE_FILE, $method);
+
+        return unserialize(file_get_contents($file));
     }
 }

@@ -11,6 +11,8 @@
 
 namespace StevenLiebregt\RoadTrip;
 
+use Opis\Closure\SerializableClosure;
+
 class Route
 {
     const PARAMETER_SYMBOL_LEFT = "{";
@@ -25,7 +27,7 @@ class Route
     /** @var string Holds the path that this route should be matched on. */
     private $path;
 
-    /** @var string|callable Holds the handler for this route. */
+    /** @var string|SerializableClosure Holds the handler for this route. */
     private $handler;
 
     /** @var array Holds the rules for the parameters in the path. */
@@ -40,6 +42,9 @@ class Route
     /** @var string Regular expression for routes with parameterized parts. */
     private $regex;
 
+    /** @var array Holds the names for the parameters. */
+    private $parameterNames = [];
+
     /** @var array Holds the parameters for this route. */
     private $parameters = [];
 
@@ -50,7 +55,7 @@ class Route
         $this->path = $this->collection->getPathPrefix() . $path;
         $this->handler = is_string($handler) ?
             $this->collection->getHandlerPrefix() . $handler :
-            $handler;
+            new SerializableClosure($handler);
 
         // Check if route is static by checking if it contains a placeholder character.
         $this->isStatic = (bool) !stripos($path, Route::PARAMETER_SYMBOL_LEFT);
@@ -142,11 +147,36 @@ class Route
 
             // If we are here, then we're dealing with a parameter.
             $name = str_ireplace([Route::PARAMETER_SYMBOL_LEFT, Route::PARAMETER_SYMBOL_RIGHT], '', $part);
-            $this->parameters[] = $name;
+            $this->parameterNames[] = $name;
+            $this->parameters[$name] = null;
             $regex .= isset($this->rules[$name]) ? '(' . $this->rules[$name] . ')' : '([^\/]+)';
         }
 
         $regex .= '$/'; // End of the regex, which maters end of string.
         $this->regex = $regex;
+    }
+
+    public function isMatch(string $uri): bool
+    {
+        if ($this->isStatic) {
+            return $this->path === $uri;
+        }
+
+        if (preg_match_all($this->regex, $uri, $matches) !== 0 &&
+            !empty($matches) &&
+            !empty($matches[0])) {
+            array_shift($matches);
+            // Assign matches to parameters.
+            foreach ($matches as $i => $match) {
+                $key = $this->parameterNames[$i];
+                if ($key !== null) {
+                    $this->parameters[ $key ] = $match[0];
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

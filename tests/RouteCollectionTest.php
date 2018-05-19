@@ -66,6 +66,19 @@ final class RouteCollectionTest extends TestCase
         $this->assertSame('Api\\V1\\', $collection->getHandlerPrefix());
     }
 
+    public function testNamePrefixIsSet(): void
+    {
+        // TODO:
+    }
+
+    public function testNamePrefixIsAppended(): void
+    {
+        // TODO:
+    }
+
+    /**
+     * Tests if the options can be set.
+     */
     public function testOptionsAreSet(): void
     {
         $collection = new RouteCollection();
@@ -73,8 +86,9 @@ final class RouteCollectionTest extends TestCase
 
         $this->assertSame('some-value', $collection->getOption('something'));
         $this->assertSame([
-            'pathPrefix' => null,
-            'handlerPrefix' => null,
+            'pathPrefix' => '',
+            'namePrefix' => '',
+            'handlerPrefix' => '',
             'something' => 'some-value',
         ], $collection->getOptions());
 
@@ -85,12 +99,18 @@ final class RouteCollectionTest extends TestCase
 
         $this->assertSame(123.438, $collection->getOption('number'));
         $this->assertSame([
-            'pathPrefix' => null,
-            'handlerPrefix' => null,
+            'pathPrefix' => '',
+            'namePrefix' => '',
+            'handlerPrefix' => '',
             'something' => 'some-value',
             'other' => 'thing',
             'number' => 123.438,
         ], $collection->getOptions());
+    }
+
+    public function testOptionsAreRemoved(): void
+    {
+        // TODO:
     }
 
     /**
@@ -112,6 +132,18 @@ final class RouteCollectionTest extends TestCase
         $clone = $this->invokeMethod($collection, 'clone');
 
         $this->assertEquals($collection, $clone);
+    }
+
+    public function testAddGetRoute(): void
+    {
+        // TODO:
+    }
+
+    public function testGroupIsSeparateCollection(): void
+    {
+        // TODO:
+
+        // TODO: Check if after changing option in group the original is the same.
     }
 
     /**

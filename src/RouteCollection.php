@@ -84,6 +84,7 @@ class RouteCollection
     {
         $options = [
             'pathPrefix' => $this->pathPrefix,
+            'namePrefix' => $this->namePrefix,
             'handlerPrefix' => $this->handlerPrefix,
         ];
 

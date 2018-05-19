@@ -98,7 +98,7 @@ class Route
      */
     public function setRule(string $key, string $regex): Route
     {
-        $this->rules[$key] = '(' . $regex . ')'; // Automatically add capturing group around regex.
+        $this->rules[$key] = $regex; // Automatically add capturing group around regex.
 
         return $this;
     }
@@ -167,9 +167,7 @@ class Route
             // Assign matches to parameters.
             foreach ($matches as $i => $match) {
                 $key = $this->parameterNames[$i];
-                if ($key !== null) {
-                    $this->parameters[ $key ] = $match[0];
-                }
+                $this->parameters[ $key ] = $match[0];
             }
 
             return true;

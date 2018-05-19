@@ -177,4 +177,36 @@ class Route
 
         return false;
     }
+
+    /**
+     * Return the path for this route.
+     *
+     * @return string The path for this route.
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * Return the handler for this route.
+     *
+     * @return SerializableClosure|string|array The handler for this route.
+     */
+    public function getHandler()
+    {
+        return $this->handler;
+    }
+
+    /**
+     * Return the parameters for this route.
+     *
+     * @return array The parameters for this route.
+     */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+
 }

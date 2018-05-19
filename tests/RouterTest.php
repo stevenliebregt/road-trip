@@ -13,5 +13,23 @@ use PHPUnit\Framework\TestCase;
 
 final class RouterTest extends TestCase
 {
+    public function testSetRouteDirs(): void
+    {
+        // TODO:
+    }
 
+    public function testAddRouteDirs(): void
+    {
+        // TODO:
+    }
+
+    public function testHasCache(): void
+    {
+        // TODO:
+    }
+
+    public function testMatch(): void
+    {
+        // TODO:
+    }
 }
